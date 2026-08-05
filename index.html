@@ -60,7 +60,7 @@
         .modal-title { color: #ffd700; font-size: 1.6em; margin: 15px 0; font-weight: 600; line-height: 1.4; }
         .certificate-code { background: rgba(0,0,0,0.5); border: 2px dashed #ffd700; border-radius: 15px; padding: 20px; margin: 20px 0; font-size: 1.6em; letter-spacing: 4px; color: #ffd700; font-family: 'Courier New', monospace; word-break: break-all; animation: glowPulse 2s infinite; }
         @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 45px rgba(255,215,0,0.5); } }
-        .certificate-image { max-width: 100%; max-height: 60vh; height: auto; border-radius: 15px; margin: 20px 0; border: 2px solid rgba(255,215,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.4); object-fit: contain; }
+        .certificate-image { max-width: 100%; max-height: 60vh; height: auto; border-radius: 15px; margin: 20px 0; border: 2px solid rgba(255,215,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.4); object-fit: contain; display: block; }
         .joke-frame { background: rgba(255,105,180,0.08); border: 2px solid #ff6b9d; border-radius: 20px; padding: 25px; margin: 20px 0; animation: shake 0.5s ease; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .joke-text { color: #ff6b9d; font-size: 1.3em; font-weight: 600; }
@@ -248,7 +248,7 @@
                 emoji: '📸', 
                 message: 'Сертификат на фото радужки глаза — твой уникальный арт!', 
                 type: 'image', 
-                imageSrc: 'IMG_20260806_010847_196.jpg' // ВАЖНО: Имя совпадает с файлом на сервере
+                imageSrc: './IMG_20260806_010847_196.jpg'
             },
             manicure: { name: 'Маникюрный салон', code: 'NAIL-SPA-YANA-5620', emoji: '💅', message: 'Сертификат в салон красоты на маникюр!', type: 'code' },
             ozone: { name: 'OZON', code: 'OZON-YANA-3108', emoji: '📦', message: 'Сертификат на OZON — всё, что захочешь!', type: 'code' },
@@ -278,7 +278,7 @@
 
             let giftContent = '';
             if (gift.type === 'image') {
-                giftContent = `<img src="${gift.imageSrc}" alt="Сертификат: ${gift.name}" class="certificate-image">`;
+                giftContent = `<img src="${gift.imageSrc}" alt="Сертификат: ${gift.name}" class="certificate-image" onerror="this.onerror=null; this.parentNode.innerHTML='<p style=\\'color: #ff6b9d; padding: 20px;\\'>Картинка не загрузилась 😢<br><small>Проверь, что файл ${gift.imageSrc} лежит в корне репозитория</small></p>';">`;
             } else {
                 giftContent = `<div class="certificate-code">${gift.code}</div>`;
             }
