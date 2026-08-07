@@ -3,329 +3,776 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С днём рождения, Яна! 🎂</title>
+    <title>С днём рождения, Яна! 🎂 25 лет</title>
     <style>
+        :root {
+            --gold: #ffd700;
+            --pink: #ff6b9d;
+            --dark: #0a0a2e;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text: #e0e0e0;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a1a; min-height: 100vh; overflow-x: hidden; position: relative; }
-        body.no-scroll { overflow: hidden; }
 
-        .main-site { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); z-index: 1; display: flex; justify-content: center; align-items: center; }
-        .bg-glow { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at center, rgba(255,105,180,0.06) 0%, transparent 70%); animation: rotateGlow 20s linear infinite; pointer-events: none; z-index: 0; }
-        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
 
-        .splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, #1a1a3e 0%, #0a0a1a 100%); z-index: 500; display: flex; justify-content: center; align-items: center; animation: fadeOutSplash 0.8s ease 4.5s forwards; perspective: 1000px; }
-        @keyframes fadeOutSplash { to { opacity: 0; pointer-events: none; } }
-        .splash-content { text-align: center; transform-style: preserve-3d; animation: float3d 3s ease-in-out infinite; }
-        @keyframes float3d { 0%, 100% { transform: rotateY(0deg) rotateX(0deg) translateZ(0); } 25% { transform: rotateY(8deg) rotateX(3deg) translateZ(40px); } 50% { transform: rotateY(0deg) rotateX(0deg) translateZ(0); } 75% { transform: rotateY(-8deg) rotateX(-3deg) translateZ(40px); } }
-        .splash-age { font-size: 8em; font-weight: 900; background: linear-gradient(180deg, #ffd700 0%, #ff8c00 50%, #ff6b9d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 60px rgba(255,215,0,0.6)) drop-shadow(0 0 120px rgba(255,105,180,0.4)); animation: pulseNumber 1.5s ease-in-out infinite; line-height: 1; }
-        @keyframes pulseNumber { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 60px rgba(255,215,0,0.6)); } 50% { transform: scale(1.08); filter: drop-shadow(0 0 100px rgba(255,215,0,0.9)); } }
-        .splash-name { font-size: 4em; font-weight: 700; color: white; text-shadow: 0 0 40px rgba(255,255,255,0.5), 0 0 80px rgba(255,105,180,0.4); margin-top: 10px; animation: shimmerText 2s infinite; }
-        @keyframes shimmerText { 0%, 100% { text-shadow: 0 0 40px rgba(255,255,255,0.5); } 50% { text-shadow: 0 0 80px rgba(255,255,255,0.8), 0 0 120px rgba(255,215,0,0.6); } }
-        .splash-sub { color: rgba(255,255,255,0.6); font-size: 1.3em; letter-spacing: 4px; margin-top: 20px; text-transform: uppercase; }
+        /* ============ ЗВЁЗДНЫЙ ФОН ============ */
+        .stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-        .firework { position: fixed; pointer-events: none; z-index: 501; }
-        .firework-particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; animation: explode 1.5s ease-out forwards; }
-        @keyframes explode { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+        /* ============ СПЛЭШ-ЗАСТАВКА ============ */
+        .splash {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, #1a1a3e 0%, #0a0a2e 100%);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: splashOut 0.6s ease 4s forwards;
+        }
+        @keyframes splashOut {
+            to { opacity: 0; pointer-events: none; }
+        }
 
-        .balloons-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-        .balloon { position: absolute; bottom: -200px; animation: floatBalloon 12s infinite ease-in; }
-        .balloon-body { width: 70px; height: 90px; border-radius: 50%; position: relative; box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.3); }
-        .balloon-body::after { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 15px solid; border-top-color: inherit; }
-        .balloon-string { width: 2px; height: 80px; background: rgba(255,255,255,0.4); margin: 0 auto; border-radius: 1px; animation: swayString 3s infinite ease-in-out; }
-        @keyframes floatBalloon { 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-110vh) translateX(80px) rotate(15deg); opacity: 0; } }
-        @keyframes swayString { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+        .splash-inner {
+            text-align: center;
+            animation: splashFloat 2.5s ease-in-out infinite;
+        }
+        @keyframes splashFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-12px) scale(1.04); }
+        }
 
-        .main-container { position: relative; z-index: 1; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        .title-block { text-align: center; margin-bottom: 40px; }
-        .age-badge { display: inline-block; background: linear-gradient(135deg, #ff6b9d, #ff3d7f); color: white; padding: 8px 20px; border-radius: 50px; font-size: 1em; font-weight: 600; letter-spacing: 2px; margin-bottom: 15px; }
-        .main-title { font-size: 3em; font-weight: 700; background: linear-gradient(135deg, #ffd700, #ffa07a, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 3s infinite; line-height: 1.2; }
-        @keyframes shimmer { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
-        .subtitle { color: rgba(255,255,255,0.7); font-size: 1.1em; margin-top: 10px; letter-spacing: 1px; }
-        .choice-section { text-align: center; width: 100%; max-width: 600px; }
-        .choice-question { color: #ffd700; font-size: 1.3em; margin-bottom: 30px; letter-spacing: 2px; font-weight: 300; text-transform: uppercase; }
-        .options { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
-        .option-btn { background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 30px 25px; cursor: pointer; transition: all 0.4s ease; color: white; font-size: 1.2em; font-weight: 500; flex: 1; min-width: 220px; max-width: 300px; position: relative; overflow: hidden; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-        .option-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transition: left 0.5s; }
-        .option-btn:hover::before { left: 100%; }
-        .option-btn:hover { background: rgba(255,255,255,0.12); border-color: #ff6b9d; transform: translateY(-8px); box-shadow: 0 20px 50px rgba(255,105,180,0.2); }
-        .option-btn .btn-icon { font-size: 45px; display: block; margin-bottom: 12px; }
-        .option-btn .btn-label { font-weight: 500; letter-spacing: 1px; }
+        .splash-number {
+            font-size: clamp(5rem, 15vw, 9rem);
+            font-weight: 900;
+            background: linear-gradient(180deg, #ffd700 0%, #ff8c42 40%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.5));
+            animation: pulseGlow 1.2s ease-in-out infinite;
+            line-height: 1;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.5)); }
+            50% { filter: drop-shadow(0 0 90px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 40px rgba(255, 105, 180, 0.5)); }
+        }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 600; justify-content: center; align-items: center; animation: fadeInModal 0.3s ease; }
-        .modal-overlay.active { display: flex; }
-        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-        .modal { background: linear-gradient(145deg, #1e1e3a, #2a1a3a); border-radius: 30px; padding: 40px 30px; text-align: center; max-width: 550px; width: 90%; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 40px 80px rgba(0,0,0,0.6); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-icon { font-size: 70px; margin-bottom: 10px; }
-        .modal-title { color: #ffd700; font-size: 1.6em; margin: 15px 0; font-weight: 600; line-height: 1.4; }
-        .certificate-code { background: rgba(0,0,0,0.5); border: 2px dashed #ffd700; border-radius: 15px; padding: 20px; margin: 20px 0; font-size: 1.6em; letter-spacing: 4px; color: #ffd700; font-family: 'Courier New', monospace; word-break: break-all; animation: glowPulse 2s infinite; }
-        @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 45px rgba(255,215,0,0.5); } }
-        .certificate-image { max-width: 100%; max-height: 60vh; height: auto; border-radius: 15px; margin: 20px 0; border: 2px solid rgba(255,215,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.4); object-fit: contain; display: block; }
-        .joke-frame { background: rgba(255,105,180,0.08); border: 2px solid #ff6b9d; border-radius: 20px; padding: 25px; margin: 20px 0; animation: shake 0.5s ease; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-        .joke-text { color: #ff6b9d; font-size: 1.3em; font-weight: 600; }
-        .modal-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .close-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 14px 30px; border-radius: 50px; font-size: 1em; cursor: pointer; transition: all 0.3s; letter-spacing: 1px; }
-        .close-btn:hover { background: rgba(255,255,255,0.18); transform: scale(1.05); }
-        .continue-btn { background: rgba(255,105,180,0.2); border: 1px solid #ff6b9d; color: #ff6b9d; padding: 14px 30px; border-radius: 50px; font-size: 1em; cursor: pointer; transition: all 0.3s; letter-spacing: 1px; font-weight: 600; }
-        .continue-btn:hover { background: rgba(255,105,180,0.35); transform: scale(1.05); }
-        .final-list { text-align: left; display: inline-block; margin: 15px 0; color: rgba(255,255,255,0.8); line-height: 2; font-size: 1.1em; }
+        .splash-name {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+            margin-top: 8px;
+        }
+        .splash-sub {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            letter-spacing: 5px;
+            margin-top: 16px;
+            text-transform: uppercase;
+        }
 
-        @media (max-width: 600px) {
-            .splash-age { font-size: 5em; }
-            .splash-name { font-size: 2.5em; }
-            .main-title { font-size: 2em; }
-            .options { flex-direction: column; align-items: center; }
-            .option-btn { max-width: 100%; width: 100%; min-width: unset; }
-            .choice-question { font-size: 1.1em; }
+        /* ============ ОСНОВНОЙ КОНТЕНТ ============ */
+        .app {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            gap: 24px;
+        }
+
+        .header {
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--pink), #ff3d7f);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+        .title {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffd700, #ffa07a, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.35); }
+        }
+        .subtitle {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.9rem;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        /* ============ ИГРОВАЯ ЗОНА ============ */
+        .game {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        .round-label {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: var(--gold);
+            padding: 5px 16px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+        .question {
+            color: var(--gold);
+            font-size: 1.05rem;
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 18px 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 215, 0, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+        }
+        .card:active { transform: scale(0.96); }
+
+        .card.shake {
+            animation: shake 0.5s ease;
+            border-color: #ff4444 !important;
+            background: rgba(255, 50, 50, 0.15) !important;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        .card.correct {
+            border-color: #ffd700 !important;
+            background: rgba(255, 215, 0, 0.12) !important;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.35) !important;
+            animation: popCorrect 0.5s ease;
+        }
+        @keyframes popCorrect {
+            0%, 100% { transform: scale(1); }
+            40% { transform: scale(1.07); }
+        }
+
+        .card-num {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .card-emoji {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .card-title {
+            font-weight: 500;
+            font-size: 0.85rem;
+            line-height: 1.25;
+        }
+
+        /* ============ МОДАЛКА ============ */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: linear-gradient(145deg, #1e1e3a, #2a1a3a);
+            border-radius: 28px;
+            padding: 32px 24px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon { font-size: 3.5rem; margin-bottom: 8px; }
+        .modal-title {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .cert-code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px dashed var(--gold);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 14px 0;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            animation: codeGlow 2s ease infinite;
+        }
+        @keyframes codeGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
+            50% { box-shadow: 0 0 35px rgba(255, 215, 0, 0.35); }
+        }
+        .cert-img {
+            max-width: 100%;
+            border-radius: 14px;
+            margin: 14px 0;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+        }
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.25s ease;
+            letter-spacing: 1px;
+            font-weight: 500;
+            background: transparent;
+            color: #fff;
+        }
+        .btn-gold {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(255, 215, 0, 0.08);
+        }
+        .btn-gold:hover { background: rgba(255, 215, 0, 0.22); transform: scale(1.04); }
+        .btn-pink {
+            border-color: var(--pink);
+            color: var(--pink);
+            background: rgba(255, 105, 180, 0.08);
+        }
+        .btn-pink:hover { background: rgba(255, 105, 180, 0.22); transform: scale(1.04); }
+
+        /* ============ ФИНАЛ ============ */
+        .final-list {
+            color: #ccc;
+            line-height: 2;
+            font-size: 1.05rem;
+            margin: 16px 0;
+        }
+        .final-list span { color: var(--gold); margin-right: 6px; }
+
+        /* ============ КОНФЕТТИ ============ */
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 900;
+        }
+        .confetti-piece {
+            position: absolute;
+            top: -30px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            80% { opacity: 1; }
+            100% {
+                transform: translateY(105vh) rotate(720deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* ============ АДАПТИВ ============ */
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .card { padding: 14px 8px; }
+            .card-emoji { font-size: 1.8rem; }
+            .card-title { font-size: 0.75rem; }
+            .modal { padding: 24px 16px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-site" id="mainSite">
-        <div class="bg-glow"></div>
-        <div class="balloons-container" id="balloonsContainer"></div>
+    <!-- Canvas для звёзд -->
+    <canvas class="stars-canvas" id="starsCanvas"></canvas>
 
-        <div class="splash-screen" id="splashScreen">
-            <div class="splash-content">
-                <div class="splash-age">25</div>
-                <div class="splash-name">Яна</div>
-                <div class="splash-sub">С днём рождения!</div>
-            </div>
-        </div>
-
-        <div class="main-container">
-            <div class="title-block">
-                <div class="age-badge">✨ 25 лет ✨</div>
-                <h1 class="main-title">С днём рождения,<br>Яна!</h1>
-                <p class="subtitle">Я подготовил кое-что особенное для тебя...</p>
-            </div>
-            <div class="choice-section">
-                <p class="choice-question" id="choiceQuestion">Что ты выбираешь?</p>
-                <div class="options" id="optionsContainer">
-                    <button class="option-btn" onclick="showGift('goldApple')">
-                        <span class="btn-icon">💄</span>
-                        <span class="btn-label">Сертификат в Золотое Яблоко</span>
-                    </button>
-                    <button class="option-btn" onclick="startRoseQuest()">
-                        <span class="btn-icon">🌹</span>
-                        <span class="btn-label">51 роза</span>
-                    </button>
-                </div>
-            </div>
+    <!-- Заставка -->
+    <div class="splash" id="splash">
+        <div class="splash-inner">
+            <div class="splash-number">25</div>
+            <div class="splash-name">Яна</div>
+            <div class="splash-sub">С днём рождения!</div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent"></div>
+    <!-- Основной блок -->
+    <main class="app" id="app">
+        <header class="header">
+            <div class="badge">✨ 25 лет ✨</div>
+            <h1 class="title">С днём рождения,<br>Яна!</h1>
+            <p class="subtitle">Угадай, какой подарок настоящий!</p>
+        </header>
+
+        <section class="game" id="gameArea">
+            <div class="round-label" id="roundLabel">Раунд 1 из 5</div>
+            <p class="question">Выбери настоящий подарок:</p>
+            <div class="grid" id="cardGrid"></div>
+        </section>
+    </main>
+
+    <!-- Модальное окно -->
+    <div class="overlay" id="overlay">
+        <div class="modal" id="modal"></div>
     </div>
+
+    <!-- Конфетти -->
+    <div class="confetti-container" id="confettiContainer"></div>
 
     <script>
-        function launchSplashFirework(x, y) {
-            const container = document.getElementById('splashScreen');
-            const colors = ['#ffd700', '#ff6b9d', '#ff4500', '#ff1493', '#ffa500', '#ff69b4', '#ffff00', '#00ffff'];
-            for (let i = 0; i < 40; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'firework-particle';
-                particle.style.position = 'absolute';
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.setProperty('--dx', (Math.random() - 0.5) * 300 + 'px');
-                particle.style.setProperty('--dy', (Math.random() - 0.5) * 300 + 'px');
-                particle.style.width = (Math.random() * 8 + 3) + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDuration = (Math.random() * 1 + 1) + 's';
-                particle.style.animationDelay = Math.random() * 0.3 + 's';
-                container.appendChild(particle);
-                setTimeout(() => particle.remove(), 2000);
+        (() => {
+            // ==================== ЗВЁЗДНЫЙ ФОН ====================
+            const canvas = document.getElementById('starsCanvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            let w, h;
+
+            function resizeCanvas() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
             }
-        }
 
-        function startSplashFireworks() {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            const spots = [
-                { x: w * 0.3, y: h * 0.3, delay: 0 },
-                { x: w * 0.7, y: h * 0.2, delay: 600 },
-                { x: w * 0.5, y: h * 0.5, delay: 1200 },
-                { x: w * 0.2, y: h * 0.6, delay: 1800 },
-                { x: w * 0.8, y: h * 0.5, delay: 2400 },
-                { x: w * 0.4, y: h * 0.7, delay: 3000 },
-                { x: w * 0.6, y: h * 0.3, delay: 3500 },
-            ];
-            spots.forEach(spot => {
-                setTimeout(() => launchSplashFirework(spot.x, spot.y), spot.delay);
-            });
-        }
-
-        function createBalloons() {
-            const container = document.getElementById('balloonsContainer');
-            const colors = ['#ff6b9d', '#ffd700', '#ff8c69', '#ff69b4', '#ffa07a', '#ff1493', '#ffb6c1', '#ff4500', '#da70d6', '#f0e68c'];
-            for (let i = 0; i < 15; i++) {
-                const balloon = document.createElement('div');
-                balloon.className = 'balloon';
-                balloon.style.left = Math.random() * 90 + '%';
-                balloon.style.animationDelay = Math.random() * 12 + 's';
-                balloon.style.animationDuration = (Math.random() * 8 + 10) + 's';
-                const body = document.createElement('div');
-                body.className = 'balloon-body';
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                body.style.background = `radial-gradient(circle at 35% 30%, rgba(255,255,255,0.3), ${color} 70%)`;
-                body.style.setProperty('border-top-color', color);
-                const string = document.createElement('div');
-                string.className = 'balloon-string';
-                string.style.animationDelay = Math.random() * 3 + 's';
-                balloon.appendChild(body);
-                balloon.appendChild(string);
-                container.appendChild(balloon);
-            }
-        }
-
-        const roseQuestSteps = [
-            { icon: '🌹', title: 'Ты уверена?', text: 'Может, всё-таки посмотришь на сертификаты? Там много всего интересного...', btnYes: 'Да, хочу розы!', btnNo: 'Покажи сертификаты' },
-            { icon: '🤔', title: 'Может, передумаешь?', text: 'Сертификаты не кусаются! А розы... ну, они завянут через неделю.', btnYes: 'Всё равно хочу розы!', btnNo: 'Ладно, уговорил' },
-            { icon: '😅', title: 'Ну подумай ещё...', text: 'Последний шанс! Сертификат в Золотое Яблоко, маникюр, OZON, Wildberries... Или розы?', btnYes: 'РОЗЫ!!!', btnNo: 'Хорошо, давай сертификат' },
-            { icon: '😄', title: 'Серьёзно?', text: 'Ты очень настойчивая! Но я тебя всё равно люблю.', btnYes: 'Да, я настойчивая!', btnNo: 'Сдаюсь, показывай подарки' },
-        ];
-
-        let currentRoseStep = 0;
-
-        function startRoseQuest() {
-            currentRoseStep = 0;
-            showRoseStep();
-        }
-
-        function showRoseStep() {
-            const modalContent = document.getElementById('modalContent');
-            const overlay = document.getElementById('modalOverlay');
-            if (currentRoseStep < roseQuestSteps.length) {
-                const step = roseQuestSteps[currentRoseStep];
-                modalContent.innerHTML = `
-                    <div class="modal-icon">${step.icon}</div>
-                    <div class="modal-title">${step.title}</div>
-                    <div class="joke-frame"><p class="joke-text">${step.text}</p></div>
-                    <div class="modal-buttons">
-                        <button class="continue-btn" onclick="continueRoseQuest()">${step.btnYes}</button>
-                        <button class="close-btn" onclick="giveUpRoses()">${step.btnNo}</button>
-                    </div>`;
-            } else {
-                modalContent.innerHTML = `
-                    <div class="modal-icon">😆</div>
-                    <div class="modal-title">Розы — это классно!</div>
-                    <div class="joke-frame">
-                        <p class="joke-text">Но не сегодня! 🌹😄</p>
-                        <p style="color: rgba(255,255,255,0.6); margin-top: 10px;">Попробуй выбрать сертификат — там точно кое-что интересное!</p>
-                    </div>
-                    <button class="close-btn" onclick="closeModal()">Ладно, поняла!</button>`;
-                currentRoseStep = 0;
-            }
-            openModal();
-        }
-
-        function continueRoseQuest() {
-            currentRoseStep++;
-            showRoseStep();
-        }
-
-        function giveUpRoses() {
-            closeModal();
-            const giftKeys = ['goldApple', 'photoRainbow', 'manicure', 'ozone', 'wildberries'];
-            for (let key of giftKeys) {
-                if (!shownGifts.includes(key)) {
-                    showGift(key);
-                    return;
+            function createStars(count = 200) {
+                stars = [];
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        r: Math.random() * 1.8 + 0.2,
+                        alpha: Math.random(),
+                        speed: Math.random() * 0.4 + 0.1,
+                    });
                 }
             }
-            showGift('goldApple');
-        }
 
-        const gifts = {
-            goldApple: { name: 'Золотое Яблоко', code: 'GA-2024-YANA-8842', emoji: '💄', message: 'Сертификат в Золотое Яблоко! Выбирай самые лучшие бьюти-находки!', type: 'code' },
-            photoRainbow: { 
-                name: 'Фото радужки глаза', 
-                emoji: '📸', 
-                message: 'Сертификат на фото радужки глаза — твой уникальный арт!', 
-                type: 'image', 
-                imageSrc: './IMG_20260806_010847_196.jpg'
-            },
-            manicure: { name: 'Маникюрный салон', code: 'NAIL-SPA-YANA-5620', emoji: '💅', message: 'Сертификат в салон красоты на маникюр!', type: 'code' },
-            ozone: { name: 'OZON', code: 'OZON-YANA-3108', emoji: '📦', message: 'Сертификат на OZON — всё, что захочешь!', type: 'code' },
-            wildberries: { name: 'Wildberries', code: 'WB-YANA-2024', emoji: '🛍️', message: 'Сертификат на Wildberries — шопинг без границ!', type: 'code' }
-        };
-
-        const giftKeys = ['goldApple', 'photoRainbow', 'manicure', 'ozone', 'wildberries'];
-        let shownGifts = [];
-
-        function openModal() {
-            document.getElementById('modalOverlay').classList.add('active');
-            document.body.classList.add('no-scroll');
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-            document.body.classList.remove('no-scroll');
-        }
-
-        function showGift(giftKey) {
-            if (!shownGifts.includes(giftKey)) shownGifts.push(giftKey);
-
-            const gift = gifts[giftKey];
-            const modalContent = document.getElementById('modalContent');
-            const remaining = 5 - shownGifts.length;
-            const hintText = remaining > 0 ? 'Но это ещё не всё... Закрывай и пробуй другой вариант!' : '';
-
-            let giftContent = '';
-            if (gift.type === 'image') {
-                giftContent = `<img src="${gift.imageSrc}" alt="Сертификат: ${gift.name}" class="certificate-image" onerror="this.onerror=null; this.parentNode.innerHTML='<p style=\\'color: #ff6b9d; padding: 20px;\\'>Картинка не загрузилась 😢<br><small>Проверь, что файл ${gift.imageSrc} лежит в корне репозитория</small></p>';">`;
-            } else {
-                giftContent = `<div class="certificate-code">${gift.code}</div>`;
+            function drawStars() {
+                ctx.clearRect(0, 0, w, h);
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
+                    ctx.fill();
+                    star.alpha += star.speed * 0.01;
+                    if (star.alpha > 1 || star.alpha < 0.1) star.speed *= -1;
+                });
+                requestAnimationFrame(drawStars);
             }
 
-            modalContent.innerHTML = `
-                <div class="modal-icon">${gift.emoji}</div>
-                <div class="modal-title">${gift.message}</div>
-                ${giftContent}
-                ${hintText ? `<p style="color: rgba(255,255,255,0.4); font-size: 0.85em; margin-top: 5px;">${hintText}</p>` : ''}
-                <button class="close-btn" onclick="closeModal()">Спасибо!</button>
+            resizeCanvas();
+            createStars();
+            drawStars();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                createStars();
+            });
+
+            // ==================== ФЕЙЕРВЕРКИ ЗАСТАВКИ ====================
+            function launchFirework(x, y) {
+                const splash = document.getElementById('splash');
+                const colors = ['#ffd700', '#ff6b9d', '#ff4500', '#ff69b4', '#ffa500', '#ff0', '#0ff', '#ff1493'];
+                for (let i = 0; i < 35; i++) {
+                    const p = document.createElement('div');
+                    p.style.cssText = `
+                        position: absolute;
+                        left: ${x}px;
+                        top: ${y}px;
+                        width: ${Math.random() * 7 + 2}px;
+                        height: ${Math.random() * 7 + 2}px;
+                        border-radius: 50%;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        pointer-events: none;
+                        z-index: 1001;
+                        animation: fireworkBurst ${Math.random() * 1 + 1}s ease-out forwards;
+                        --dx: ${(Math.random() - 0.5) * 250}px;
+                        --dy: ${(Math.random() - 0.5) * 250}px;
+                    `;
+                    splash.appendChild(p);
+                    setTimeout(() => p.remove(), 2000);
+                }
+            }
+
+            // Вставляем keyframes для фейерверков
+            const fireworkStyle = document.createElement('style');
+            fireworkStyle.textContent = `
+                @keyframes fireworkBurst {
+                    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+                    100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+                }
             `;
+            document.head.appendChild(fireworkStyle);
 
-            openModal();
-            updateChoiceButtons();
-        }
-
-        document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-
-        function updateChoiceButtons() {
-            const optionsContainer = document.getElementById('optionsContainer');
-            const choiceQuestion = document.getElementById('choiceQuestion');
-
-            if (shownGifts.length >= 5) {
-                choiceQuestion.textContent = '';
-                optionsContainer.innerHTML = `<p style="color: #ffd700; font-size: 1.5em; font-weight: 300; letter-spacing: 2px;">Все подарки твои, Яна!</p>`;
-            } else {
-                choiceQuestion.textContent = 'Что ты выберешь дальше?';
-                const nextGiftKey = giftKeys.find(k => !shownGifts.includes(k));
-                const nextGift = gifts[nextGiftKey];
-                optionsContainer.innerHTML = `
-                    <button class="option-btn" onclick="showGift('${nextGiftKey}')">
-                        <span class="btn-icon">${nextGift.emoji}</span>
-                        <span class="btn-label">Сертификат в ${nextGift.name}</span>
-                    </button>
-                    <button class="option-btn" onclick="startRoseQuest()">
-                        <span class="btn-icon">🌹</span>
-                        <span class="btn-label">51 роза</span>
-                    </button>`;
+            function startSplashFireworks() {
+                const ww = window.innerWidth;
+                const wh = window.innerHeight;
+                const spots = [
+                    { x: ww * 0.3, y: wh * 0.35, d: 0 },
+                    { x: ww * 0.7, y: wh * 0.3, d: 500 },
+                    { x: ww * 0.5, y: wh * 0.5, d: 1100 },
+                    { x: ww * 0.25, y: wh * 0.6, d: 1700 },
+                    { x: ww * 0.75, y: wh * 0.55, d: 2300 },
+                    { x: ww * 0.4, y: wh * 0.7, d: 2800 },
+                    { x: ww * 0.6, y: wh * 0.4, d: 3300 },
+                ];
+                spots.forEach(s => setTimeout(() => launchFirework(s.x, s.y), s.d));
             }
-        }
 
-        window.addEventListener('load', () => {
-            startSplashFireworks();
-            createBalloons();
-        });
+            // ==================== КОНФЕТТИ ПОБЕДЫ ====================
+            function launchConfetti() {
+                const container = document.getElementById('confettiContainer');
+                const emojis = ['🎉', '✨', '💝', '🌟', '💎', '🎀', '💖', '🏆', '🥇', '💫', '🎂', '💐'];
+                const colors = ['#ffd700', '#ff6b9d', '#ff4500', '#ff69b4', '#ffa500', '#ff0', '#0ff', '#ff1493', '#7bff5a'];
+
+                for (let i = 0; i < 60; i++) {
+                    setTimeout(() => {
+                        const el = document.createElement('div');
+                        el.className = 'confetti-piece';
+                        el.style.left = Math.random() * 100 + '%';
+                        el.style.fontSize = (Math.random() * 22 + 12) + 'px';
+                        el.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+                        el.style.animationDelay = '0s';
+
+                        if (Math.random() > 0.5) {
+                            el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                        } else {
+                            el.style.width = (Math.random() * 10 + 6) + 'px';
+                            el.style.height = (Math.random() * 10 + 6) + 'px';
+                            el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                            el.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        }
+
+                        container.appendChild(el);
+                        setTimeout(() => el.remove(), 3500);
+                    }, i * 20);
+                }
+            }
+
+            // ==================== ДАННЫЕ ИГРЫ ====================
+            const rounds = [
+                {
+                    round: 1,
+                    real: {
+                        name: 'Сертификат в Золотое Яблоко',
+                        emoji: '💄',
+                        type: 'code',
+                        code: 'GA-2024-YANA-8842',
+                        msg: 'Ты угадала! Сертификат в Золотое Яблоко — выбирай лучшие бьюти-находки!',
+                    },
+                    fakes: [
+                        { name: 'Пожизненный запас лапши быстрого приготовления', emoji: '🍜' },
+                        { name: 'Абонемент на мытьё посуды (исполнитель — ты)', emoji: '🧽' },
+                        { name: 'Сертификат на обнимашки (безлимит)', emoji: '🤗' },
+                        { name: 'Поездка на такси за мой счёт (до 100 ₽)', emoji: '🚕' },
+                    ],
+                },
+                {
+                    round: 2,
+                    real: {
+                        name: 'Фото радужки глаза',
+                        emoji: '📸',
+                        type: 'image',
+                        imageSrc: 'IMG_20260806_010847_196.jpg',
+                        msg: 'Ты угадала! Сертификат на фото радужки глаза — твой уникальный арт!',
+                    },
+                    fakes: [
+                        { name: 'Портрет в стиле «палка-огуречик»', emoji: '🎨' },
+                        { name: 'Корона из фольги (ручная работа)', emoji: '👑' },
+                        { name: 'Сертификат на комплименты (безлимит на сутки)', emoji: '💬' },
+                        { name: 'Фотосессия с голубями (голуби не прилагаются)', emoji: '🕊️' },
+                    ],
+                },
+                {
+                    round: 3,
+                    real: {
+                        name: 'Сертификат в маникюрный салон',
+                        emoji: '💅',
+                        type: 'code',
+                        code: 'NAIL-SPA-YANA-5620',
+                        msg: 'Ты угадала! Сертификат в салон красоты на маникюр!',
+                    },
+                    fakes: [
+                        { name: 'Маникюр лопатой (экспресс-метод)', emoji: '🪣' },
+                        { name: 'Дизайн ногтей фломастерами (набор 6 цветов)', emoji: '🖍️' },
+                        { name: 'Наклейки на ногти Love is... (винтаж)', emoji: '💌' },
+                        { name: 'Спа-день в собственной ванной (пена прилагается)', emoji: '🛁' },
+                    ],
+                },
+                {
+                    round: 4,
+                    real: {
+                        name: 'Сертификат на OZON',
+                        emoji: '📦',
+                        type: 'code',
+                        code: 'OZON-YANA-3108',
+                        msg: 'Ты угадала! Сертификат на OZON — всё, что захочешь!',
+                    },
+                    fakes: [
+                        { name: 'Коробка воздуха с OZON (экологично!)', emoji: '💨' },
+                        { name: 'Промокод OZON на 0 рублей', emoji: '🏷️' },
+                        { name: 'Скидка 1% на всё (почти даром)', emoji: '📉' },
+                        { name: 'Доставка голубиной почтой', emoji: '🕊️' },
+                    ],
+                },
+                {
+                    round: 5,
+                    real: {
+                        name: 'Сертификат на Wildberries',
+                        emoji: '🛍️',
+                        type: 'code',
+                        code: 'WB-YANA-2024',
+                        msg: 'Ты угадала! Сертификат на Wildberries — шопинг без границ!',
+                    },
+                    fakes: [
+                        { name: 'Сертификат на одну примерку в любом ПВЗ', emoji: '👗' },
+                        { name: 'WB карта с балансом 0.01 ₽', emoji: '💳' },
+                        { name: 'Скидка на невидимую шапку', emoji: '🫥' },
+                        { name: 'Доставка курьером на самокате (вечно опаздывает)', emoji: '🛴' },
+                    ],
+                },
+            ];
+
+            // ==================== ЛОГИКА ИГРЫ ====================
+            let currentRound = 0;
+            let currentCards = [];
+
+            const roundLabel = document.getElementById('roundLabel');
+            const cardGrid = document.getElementById('cardGrid');
+            const overlay = document.getElementById('overlay');
+            const modal = document.getElementById('modal');
+
+            function shuffle(arr) {
+                const a = [...arr];
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function buildRound() {
+                const r = rounds[currentRound];
+                currentCards = shuffle([{ ...r.real, isReal: true }, ...r.fakes.map(f => ({ ...f, isReal: false }))]);
+            }
+
+            function renderCards() {
+                const r = rounds[currentRound];
+                roundLabel.textContent = `Раунд ${r.round} из 5`;
+                cardGrid.innerHTML = '';
+
+                currentCards.forEach((card, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'card';
+                    el.innerHTML = `
+                        <div class="card-num">ВАРИАНТ ${i + 1}</div>
+                        <span class="card-emoji">${card.emoji}</span>
+                        <div class="card-title">${card.name}</div>
+                    `;
+                    el.addEventListener('click', () => handlePick(card, el));
+                    cardGrid.appendChild(el);
+                });
+            }
+
+            function handlePick(card, el) {
+                // Блокируем все карточки
+                document.querySelectorAll('.card').forEach(c => c.style.pointerEvents = 'none');
+
+                if (card.isReal) {
+                    el.classList.add('correct');
+                    setTimeout(() => showWin(card), 450);
+                } else {
+                    el.classList.add('shake');
+                    setTimeout(() => showLose(), 450);
+                }
+            }
+
+            function showWin(gift) {
+                let content = '';
+                if (gift.type === 'image') {
+                    content = `<img src="${gift.imageSrc}" alt="${gift.name}" class="cert-img">`;
+                } else if (gift.type === 'code') {
+                    content = `<div class="cert-code">${gift.code}</div>`;
+                }
+
+                const isLast = currentRound >= 4;
+                modal.innerHTML = `
+                    <div class="modal-icon">${gift.emoji}</div>
+                    <div class="modal-title">${gift.msg}</div>
+                    ${content}
+                    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;">Раунд ${rounds[currentRound].round} из 5 пройден!</p>
+                    <div class="modal-btns">
+                        <button class="btn btn-gold" id="nextBtn">${isLast ? 'Открыть финал 🎉' : 'Следующий подарок ➡️'}</button>
+                    </div>
+                `;
+                overlay.classList.add('active');
+                document.getElementById('nextBtn').addEventListener('click', nextRound);
+                launchConfetti();
+            }
+
+            function showLose() {
+                modal.innerHTML = `
+                    <div class="modal-icon">😅</div>
+                    <div class="modal-title">Не угадала!</div>
+                    <p style="color:var(--pink);margin:10px 0;">Это был ненастоящий подарок 😄</p>
+                    <div class="modal-btns">
+                        <button class="btn btn-pink" id="retryBtn">Попробовать снова 🔄</button>
+                    </div>
+                `;
+                overlay.classList.add('active');
+                document.getElementById('retryBtn').addEventListener('click', retry);
+            }
+
+            function closeModal() {
+                overlay.classList.remove('active');
+            }
+
+            function retry() {
+                closeModal();
+                buildRound();
+                renderCards();
+            }
+
+            function nextRound() {
+                closeModal();
+                currentRound++;
+                if (currentRound >= 5) {
+                    showFinal();
+                } else {
+                    buildRound();
+                    renderCards();
+                }
+            }
+
+            function showFinal() {
+                document.getElementById('gameArea').innerHTML = `
+                    <div style="animation: modalIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                        <div style="font-size:4rem;margin-bottom:10px;">🎉💝🎂</div>
+                        <div style="color:var(--gold);font-size:1.5rem;font-weight:600;margin-bottom:14px;">
+                            Ты прошла все 5 раундов!
+                        </div>
+                        <div class="final-list">
+                            <span>✅</span> Золотое Яблоко<br>
+                            <span>✅</span> Фото радужки глаза<br>
+                            <span>✅</span> Маникюрный салон<br>
+                            <span>✅</span> OZON<br>
+                            <span>✅</span> Wildberries
+                        </div>
+                        <p style="color:var(--gold);font-size:1.2rem;margin-top:14px;font-weight:500;">
+                            С днём рождения, Яна!<br>Ты заслуживаешь всего самого лучшего! 💖
+                        </p>
+                    </div>
+                `;
+                launchConfetti();
+                setTimeout(launchConfetti, 700);
+            }
+
+            // Закрытие модалки по клику на оверлей
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+
+            // ==================== ЗАПУСК ====================
+            function init() {
+                startSplashFireworks();
+                buildRound();
+                renderCards();
+            }
+
+            // Ждём загрузку DOM
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
     </script>
 </body>
 </html>
